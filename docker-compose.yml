@@ -1,0 +1,80 @@
+version: '3.7'
+services:
+  php_server:
+    build:
+      context: ./scripts
+      dockerfile: php-dockerfile
+    container_name: dev-phpserver
+    restart: always
+    labels:
+        com.myserver.description: "Laravel app with php-fpm 7.3"
+        com.myserver.creator: "Praveen B"
+        com.myserver.version: "1.0"
+    ports:
+          - "9000"
+    volumes:
+      - type: bind
+        source: ./application
+        target: /var/www
+    networks:
+          app_net:
+            ipv4_address: 172.16.238.11
+    tty: true
+  db_server:
+    image: postgres:10.10
+    container_name: dev-dbserver
+    restart: always
+    labels:
+        com.myserver.description: "Laravel app with postgres 10"
+        com.myserver.creator: "Praveen B"
+        com.myserver.version: "1.0"
+    ports:
+          - "5432"
+    networks:
+          app_net:
+            ipv4_address: 172.16.238.12
+    volumes:
+      - type: volume
+        source: dev_db_data
+        target: /var/lib/postgresql/data
+        # volume:
+        #   nocopy: true
+    environment:
+      - POSTGRES_DB=dev
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+    tty: true
+  web_server:
+    image: nginx
+    container_name: dev-nginxserver
+    restart: always
+    labels:
+        com.myserver.description: "Laravel app with nginx"
+        com.myserver.creator: "Praveen B"
+        com.myserver.version: "1.0"
+    ports:
+          - "80"
+    depends_on:
+      - php_server
+      - db_server
+    volumes:
+      - type: bind
+        source: ./conf.d
+        target: /etc/nginx/conf.d
+      - type: bind
+        source: ./application
+        target: /var/www
+    networks:
+          app_net:
+            ipv4_address: 172.16.238.10
+    tty: true
+networks:
+  app_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/24"
+volumes:
+  dev_db_data:
+
+
