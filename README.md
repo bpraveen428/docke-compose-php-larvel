@@ -22,8 +22,9 @@ please add the below lines to your "/etc/hosts" file in your host machine
 ## SSL certificates
 1. If you are usign ssl please copy your cerficate to "conf.d/ssl/ssl.crt" file and copy your key to "conf.d/ssl/ssl.key" files respectively
 
-Now do "docker-compose up -d" in the base folder
-use "docker exec -it dev-phpserver bash" to login to php container bash
-use "docker exec -it dev-dbserver bash" to login to DB container bash
-use "docker exec -it dev-nginxserver bash" to login to nginx container bash
+## Now do "docker-compose up -d" in the base folder
+1. use "docker exec -it dev-phpserver bash" to login to php container bash
+2. use "docker exec -it dev-dbserver bash" to login to DB container bash
+3. use "docker exec -it dev-nginxserver bash" to login to nginx container bash
 
+Browse "local.adminer.com" to get the adminer page
